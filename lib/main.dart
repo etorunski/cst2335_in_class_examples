@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -55,9 +55,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  late TextEditingController _controller; //late instantiate later
 
   var isChecked = false;
 
+  @override
+  void initState(){ //same as onLoaded() in html
+    super.initState();
+
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); //delete the object from initState()
+    super.dispose();
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -121,7 +134,21 @@ class _MyHomePageState extends State<MyHomePage> {
              setState(() { //redraw UI
                isChecked = newChecked!; // ! non-null assertion, if it is null, red crash screen
              });
-         },) //false to start
+         },), //false to start
+            Switch(value: isChecked, onChanged: (newVal){
+              setState(() {
+                isChecked = newVal!;
+              });
+
+            }),
+
+            TextField(controller: _controller,
+              decoration:
+              InputDecoration(
+                  hintText:"Type here",
+                  border: OutlineInputBorder(),
+                  labelText: "First name"
+              ),)
           ],
         ),
       ),
@@ -134,6 +161,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void buttonPressed(){
+     var inpt = _controller.value.text; //get the string written
 
+    _controller.text = "You typed " + inpt; //put into the text field
   }
 }
