@@ -105,9 +105,12 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: .center,
           children: [
             const Text('You have pushed the button this many times:'),
-            Image.asset("images/algonquin.jpg", width:900.0, height:600.0),
-            Text('$_counter',        style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            Image.asset("images/algonquin.jpg", width:300.0, height:200.0),
+
+            ElevatedButton(child:Text('Click me'), onPressed:buttonPressed) ,
+
+            ElevatedButton(child:Image.asset("images/algonquin.jpg", height:100.0, width:150.0),
+                onPressed:    ()  {  }  ) , //no name (lambda) function
           ],
         ),
       ),
@@ -117,5 +120,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  void buttonPressed(){
+
   }
 }
