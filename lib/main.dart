@@ -85,25 +85,47 @@ class _MyHomePageState extends State<MyHomePage> {
 
       ]),
       body: Center(
-        child: Stack(
-            alignment: .bottomRight,
-
+        child:
+        Row(children: [
+          Spacer(flex:1),
+Expanded(flex:5,
+    child:
+          Column(
+            crossAxisAlignment: .start,
+           mainAxisAlignment: .spaceEvenly,
           children: [
-            Image.asset("images/algonquin.jpg"),
-            ElevatedButton(onPressed: (){}, child:Text("Button1")),
+            Expanded(flex:1, child: Text(""),),
 
-            ElevatedButton(onPressed: (){}, child:Text("Button2")),
+            Text("One-pan skillet cookie", style: TextStyle(color:Colors.orange, fontSize: 40.0),),
+            Text("Ingredient list"),
 
-            ElevatedButton(onPressed: (){}, child:Text("Button3")),
-/*
-            ElevatedButton(onPressed: (){}, child:Text("Button4")),
 
-            ElevatedButton(onPressed: (){}, child:Text("Button5"))
+            Expanded(flex:1, child: Text(""),),
 
- */
+
+            Row(mainAxisAlignment: .start,  children: [
+              Icon(Icons.star),
+              Text("1 stick of unsalted butter",  style: TextStyle(color:Colors.orange))
+            ],),
+            Row(mainAxisAlignment: .start, children: [
+              Icon(Icons.star),
+              Text("1/2 C granulated sugar")
+            ],),
+            Row(mainAxisAlignment: .start, children: [
+              Icon(Icons.star),
+              Text("1/2 C light brown sugar")
+            ],),
+
+
+            Expanded(flex:5, child: Text(""),),
+
           ], //empty column
-        ),
-      ),
+        )),
+
+          Spacer(flex:1),
+        ]
+      )
+      )
 
     );
   }
