@@ -85,19 +85,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
       ]),
       body: Center(
-        child: Row(
-          mainAxisAlignment:  .end,
+        child: Stack(
+            alignment: .bottomRight,
 
           children: [
+            Image.asset("images/algonquin.jpg"),
             ElevatedButton(onPressed: (){}, child:Text("Button1")),
 
             ElevatedButton(onPressed: (){}, child:Text("Button2")),
 
             ElevatedButton(onPressed: (){}, child:Text("Button3")),
-
+/*
             ElevatedButton(onPressed: (){}, child:Text("Button4")),
 
             ElevatedButton(onPressed: (){}, child:Text("Button5"))
+
+ */
           ], //empty column
         ),
       ),
