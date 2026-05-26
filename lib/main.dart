@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var isChecked = false;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     _controller = TextEditingController();
@@ -58,80 +58,91 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          FilledButton(onPressed: (){}, child:Text("Save")),
-          FilledButton(onPressed: (){}, child:Text("Open")),
-          FilledButton(onPressed: (){}, child:Text("Reset"))
-        ],
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Title"),
-      ),
-      drawer:      Column(mainAxisAlignment: .end,
-        children: [
-        FilledButton(onPressed: (){}, child: Text("Go back")),],),
-      bottomNavigationBar: BottomNavigationBar(
-          onTap: (whichButton){
-            if(whichButton == 0) ///camera
-            { }
-            else if(whichButton == 1){
-              //user clicked phone
-            }
-          }, //index of array item clicked
-          items: [
-              BottomNavigationBarItem(icon: Icon(Icons.camera_alt_outlined), label: "Camera"),
-              BottomNavigationBarItem(icon: Icon(Icons.call_end_outlined), label:"Phone"  ),
-              BottomNavigationBarItem(icon: Icon(Icons.money_off_csred_outlined), label:"Cash"),
-
-      ]),
-      body: Center(
-        child:
-        Row(children: [
-          Spacer(flex:1),
-Expanded(flex:5,
-    child:
-          Column(
-            crossAxisAlignment: .start,
-           mainAxisAlignment: .spaceEvenly,
+        appBar: AppBar(
+          actions: [
+            FilledButton(onPressed: () {}, child: Text("Save")),
+            FilledButton(onPressed: () {}, child: Text("Open")),
+            FilledButton(onPressed: () {}, child: Text("Reset"))
+          ],
+          backgroundColor: Theme
+              .of(context)
+              .colorScheme
+              .inversePrimary,
+          title: Text("Favorite Recipes"),
+        ),
+        drawer: Column(mainAxisAlignment: .end,
           children: [
-            Expanded(flex:1, child: Text(""),),
+            FilledButton(onPressed: () {}, child: Text("Go back")),
+          ],),
+        bottomNavigationBar: BottomNavigationBar(
+            onTap: (whichButton) {
+              if (whichButton == 0) {
 
-            Text("One-pan skillet cookie", style: TextStyle(color:Colors.orange, fontSize: 40.0),),
-            Text("Ingredient list"),
+              }
+                ///camera {}
+              else if (whichButton == 1) {
+                //user clicked phone
+              }
+            }, //index of array item clicked
+            items: [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.camera_alt_outlined), label: "Camera"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.call_end_outlined), label: "Phone"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.money_off_csred_outlined), label: "Cash"),
+
+            ]),
+        body: Center(
+            child:
+            Row(children: [
+              Spacer(flex: 1),
+              Expanded(flex: 5,
+                  child:
+                  Column(
+                    crossAxisAlignment: .start,
+                    mainAxisAlignment: .spaceEvenly,
+                    children: [
+                      Expanded(flex: 1, child: Text(""),),
+
+                      Text("One-pan skillet cookie", style: TextStyle(
+                          color: Colors.orange, fontSize: 40.0),),
+                      Text("Ingredient list"),
 
 
-            Expanded(flex:1, child: Text(""),),
+                      Expanded(flex: 1, child: Text(""),),
 
 
-            Row(mainAxisAlignment: .start,  children: [
-              Icon(Icons.star),
-              Text("1 stick of unsalted butter",  style: TextStyle(color:Colors.orange))
-            ],),
-            Row(mainAxisAlignment: .start, children: [
-              Icon(Icons.star),
-              Text("1/2 C granulated sugar")
-            ],),
-            Row(mainAxisAlignment: .start, children: [
-              Icon(Icons.star),
-              Text("1/2 C light brown sugar")
-            ],),
+                      Row(mainAxisAlignment: .start, children: [
+                        Icon(Icons.star),
+                        Text("1 stick of unsalted butter",
+                            style: TextStyle(color: Colors.orange))
+                      ],),
+                      Row(mainAxisAlignment: .start, children: [
+                        Icon(Icons.star),
+                        Text("1/2 C granulated sugar")
+                      ],),
+                      Row(mainAxisAlignment: .start, children: [
+                        Icon(Icons.star),
+                        Text("1/2 C light brown sugar")
+                      ],),
 
 
-            Expanded(flex:5, child: Text(""),),
+                      Expanded(flex: 5, child: Text(""),),
 
-          ], //empty column
-        )),
+                    ], //empty column
+                  )),
 
-          Spacer(flex:1),
-        ]
-      )
-      )
+              Spacer(flex: 1),
+            ]
+            )
+        )
 
     );
   }
 
-  void buttonPressed(){
-     var inpt = _controller.value.text;
+  void buttonPressed() {
+    var inpt = _controller.value.text;
 
     _controller.text = "You typed " + inpt;
   }
