@@ -1,3 +1,4 @@
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -61,28 +62,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // there's await in here, so this must be async
   void loadData() async {
+    //not asynchronous
+    final encryptedPrefs = EncryptedSharedPreferences();
 
-    //timer that ends when the data is loaded
-    //await means wait until the timer ends
-    final prefs = await SharedPreferences.getInstance(); //returns a Future<>
-
-  //here the timer has finished, choose from get()), getInt(), getBool(), getString()
-    final str = prefs.getString( "USERNAME" ); //key or variable name
-
-    //this will run the function after the duration has expired:
-
-    if(str != null) {
-      Future.delayed(Duration.zero, () {
-        //this creates it:
+    //not a String?, if "USERNAME" not found, returns ""
+    encryptedPrefs.getString("USERNAME").then( (encString) {
+      if(encString.isNotEmpty) {
         var snackBar = SnackBar(
-          content: Text('Welcome back ' + str),
+          content: Text('Welcome back ' + encString),
           action: SnackBarAction(label: "Ok great", onPressed: () {}
           ),);
 
         //this shows it:
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      });
-    }
+      }
+    });
+
   }
 
 
@@ -109,11 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     decoration: InputDecoration(label:Text("Name")),),
               OutlinedButton(child:Text("Save data"), onPressed: () {
 
-                SharedPreferences.getInstance().then( ( sharedPrefs) {
-
-                  //this part is async, or runs after the timer ends
-                  sharedPrefs.setString("USERNAME", _controller.text);//
-                } );
+                EncryptedSharedPreferences encPrefs = EncryptedSharedPreferences();
+                encPrefs.setString("USERNAME", _controller.text);
 
 
                 /*
