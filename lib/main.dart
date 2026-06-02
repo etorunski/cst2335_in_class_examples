@@ -36,11 +36,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var isChecked = false;
 
+  //runs before the page is visible:
   @override
   void initState() {
     super.initState();
-
     _controller = TextEditingController();
+
+
+
+
+    //this will run the function after the duration has expired:
+    Future.delayed(Duration.zero, (){
+      //this creates it:
+      var snackBar = SnackBar(
+        content: Text('Yay! A SnackBar!') ,
+        action: SnackBarAction(label: "Ok great", onPressed: () {}
+        ),);
+
+      //this shows it:
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+
+
+
   }
 
   @override
@@ -72,8 +90,32 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Center(
             child:
-            Row(children: [
-              OutlinedButton(child:Text("Click me"), onPressed: () { },)
+            Column(mainAxisAlignment: .center,
+                children: [
+              OutlinedButton(child:Text("Click me"), onPressed: () {
+              //show a dialog
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    //the title:
+                    title: const Text('AlertDialog Title'),
+
+                    //the body
+                    content: const Text('AlertDialog description'),
+
+                    //buttons:
+                    actions: <Widget>[
+                    FilledButton(child:Text("Ok"), onPressed: (){
+                      Navigator.pop(context); //hide the dialog
+                    },),
+                       FilledButton(child:Text("Cancel"), onPressed: (){
+                         Navigator.pop(context); //hide the dialog
+                       },),
+                    ],
+                  ),
+                );
+
+              },)
             ]
             )
         )
