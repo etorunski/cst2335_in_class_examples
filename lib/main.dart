@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; //look like Android
 
 void main() {
   runApp(const MyApp());
@@ -121,34 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: .center,
           children: [
             const Text('You have pushed the button this many times:'),
-
-       Semantics(child:Padding(padding:EdgeInsets.all(20), child:Image.asset("images/algonquin.jpg", width:300.0, height:200.0)),
-           label:"An image of Algonquin college"),
-
             ElevatedButton(child:Text('Click me'), onPressed:buttonPressed) ,
 
-        Semantics(label:"An image of Algonquin college", child:Padding(padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
-                child:ElevatedButton(child:Image.asset("images/algonquin.jpg", height:100.0, width:150.0), onPressed:    ()  {  }  ) ,)), //no name (lambda) function
-         Checkbox(value:isChecked, onChanged:
-             (newChecked){
-             setState(() { //redraw UI
-               isChecked = newChecked!; // ! non-null assertion, if it is null, red crash screen
-             });
-         },), //false to start
-            Switch(value: isChecked, onChanged: (newVal){
-              setState(() {
-                isChecked = newVal!;
-              });
-
-            }),
-
-            TextField(controller: _controller,
-              decoration:
-              InputDecoration(
-                  hintText:"Type here",
-                  border: OutlineInputBorder(),
-                  labelText: "First name"
-              ),)
           ],
         ),
       ),
@@ -161,8 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void buttonPressed(){
-     var inpt = _controller.value.text; //get the string written
 
-    _controller.text = "You typed " + inpt; //put into the text field
+
   }
 }
