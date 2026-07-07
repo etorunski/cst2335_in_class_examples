@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'database/app_database.dart';
+import 'database/todo.dart';
+import 'database/todo_dao.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -13,8 +17,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Todo Floor Database'),
     );
   }
 }
@@ -29,18 +34,74 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  List<String> words = ["One", "Two"];
+  TodoDao? todoDao;
+  List<Todo> todos = [];
   late TextEditingController _nameController;
   late TextEditingController _quantityController;
-  var otherWords = <String>[];
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController();
     _quantityController = TextEditingController();
+    _initDatabase();
+  }
+
+  Future<void> _initDatabase()  async {
+    Future.delayed(Duration.zero, () async{
+
+    //create the database on disk:
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+    //get the DAO of the database
+    todoDao = database.todoDao;
+
+    //query all objects:
+    _refreshTodos();
+      //code to run later
+
+    }  );
+
+  }
+
+  Future<void> _refreshTodos() async {
+    if (todoDao != null) {
+      //querying all from database:
+      final result = await todoDao!.findAllTodos();
+      setState(() {
+        //setting our list for the listView:
+        todos = result;
+      });
+    }
+  }
+
+  Future<void> _addTodo() async {
+    //make sure fields have something in them:
+    if (_nameController.text.isNotEmpty && _quantityController.text.isNotEmpty) {
+    //create an Entity object:
+      final todo = Todo(
+        name: _nameController.text,
+        quantity: _quantityController.text,
+      );
+
+      //insert into database:
+      await todoDao?.insertTodo(todo);
+
+      //clear the textfields:
+      _nameController.clear();
+      _quantityController.clear();
+
+      //reload the data:
+      _refreshTodos();
+    }
+  }
+
+  Future<void> _deleteTodo(Todo todo) async {
+    //delete from database:
+    await todoDao?.deleteTodo(todo);
+
+    //requery data:
+    _refreshTodos();
   }
 
   @override
@@ -50,13 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  Widget ListPage(BuildContext context) {
+  Widget listPage(BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -85,17 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_nameController.text.isNotEmpty &&
-                          _quantityController.text.isNotEmpty) {
-                        words.add(
-                            "${_nameController.text} (${_quantityController.text})");
-                        _nameController.clear();
-                        _quantityController.clear();
-                      }
-                    });
-                  },
+                  onPressed: _addTodo,
                   child: const Text("add"),
                 ),
               ),
@@ -104,10 +149,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: words.length,
+            itemCount: todos.length,
             itemBuilder: (context, index) {
+              final todo = todos[index];
               return ListTile(
-                title: Text(words[index]),
+                title: Text("${todo.name} (${todo.quantity})"),
                 onLongPress: () {
                   showDialog(
                     context: context,
@@ -122,9 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           TextButton(
                             onPressed: () {
-                              setState(() {
-                                words.removeAt(index);
-                              });
+                              _deleteTodo(todo);
                               Navigator.pop(context);
                             },
                             child: const Text("Delete"),
@@ -145,12 +189,13 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
-        ),
-        body: ListPage(context)
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
+      body: todoDao == null
+          ? const Center(child: CircularProgressIndicator())
+          : listPage(context),
     );
   }
-
 }
