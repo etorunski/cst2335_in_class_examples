@@ -39,6 +39,8 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _nameController;
   late TextEditingController _quantityController;
 
+  Todo? selectedItem  = null;
+
   @override
   void initState() {
     super.initState();
@@ -111,6 +113,65 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  Widget reactiveLayout(BuildContext bc)
+  {
+    var size = MediaQuery.of(context).size; //get the size of the screen
+    var height = size.height;
+    var width = size.width;
+
+    if((width > height) && (width > 720))//landscape / desktop mode
+        {
+        return Row(children: [
+         Expanded(child: listPage(bc), flex: 1), //1 / 4
+         Expanded(child:detailsPage(bc), flex:3) //1 / 4
+        ],);
+    }
+    else //it's portrait mode
+    {
+      if(selectedItem == null){
+        //nothing is selected:
+        return listPage(bc);
+      }
+      else{
+        return detailsPage(bc);
+      }
+    }
+  }
+
+  Widget detailsPage(BuildContext context){
+
+    if(selectedItem != null)
+      {
+        //there is a selected Item:
+        return Center(child:Column(
+            mainAxisAlignment: .center,
+            children:[
+          Text("Item name is: ${selectedItem!.name}"),
+          Text("Quantity is: ${selectedItem!.quantity}"),
+              OutlinedButton(child:Text("clear"), onPressed: (){
+                setState(() {
+                  selectedItem = null; // need to go back to the listview
+                });
+
+              },),
+              OutlinedButton(child:Text("Delete"), onPressed:(){
+                setState(() {
+
+                  todos.remove(selectedItem);//we don't have the index
+                  selectedItem = null;
+
+                });
+              })
+        ]));
+      }
+    else{
+      //nothing is selected
+      return Center(child:Column(children:[
+        Text("Select an item from the list to see the details")
+      ]));
+    }
+  }
+
   Widget listPage(BuildContext context) {
     return Column(
       children: [
@@ -154,30 +215,14 @@ class _MyHomePageState extends State<MyHomePage> {
               final todo = todos[index];
               return ListTile(
                 title: Text("${todo.name} (${todo.quantity})"),
-                onLongPress: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text("Confirm"),
-                        content: const Text("Do you really want to delete this item?"),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text("Cancel"),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              _deleteTodo(todo);
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Delete"),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+                onTap: () {
+                  //The user has selected this item:
+                  setState(() {
+                    //redraw the GUI:
+
+                    selectedItem = todo; //store what was selected
+                    });
+                  },
               );
             },
           ),
@@ -193,9 +238,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: todoDao == null
-          ? const Center(child: CircularProgressIndicator())
-          : listPage(context),
+      body: reactiveLayout(context),
     );
   }
 }
