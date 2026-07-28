@@ -18,7 +18,7 @@ class AppLocalizations {
   late Map<String, String> _localizedStrings;
 
 
-  //This functino loads the *.json files into the _localizedStrings language map:
+  //This function loads the *.json files into the _localizedStrings language map:
   Future<void> load() async {
     String jsonString = await rootBundle.loadString('assets/translations/${locale.languageCode}.json');
     Map<String, dynamic> jsonMap = json.decode(jsonString);
