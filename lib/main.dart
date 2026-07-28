@@ -1,15 +1,51 @@
+import 'package:cst2335_in_class_examples/AppLocalizations.dart';
 import 'package:flutter/material.dart';
+
+//need this line:
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  static void setLocale(BuildContext context, Locale newLocale)
+  { //find the state object of your app
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state?.changeLanguage(newLocale);
+  }
+
+  @override
+  _MyAppState createState() {
+    return _MyAppState();
+  }
+}
+
+class _MyAppState extends State<MyApp>{
+
+  var _locale = Locale("en");
+
+  void changeLanguage(Locale newLocale){
+    setState(() {
+      _locale = newLocale;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      supportedLocales: [
+        Locale("en"),
+        Locale("de"),
+        Locale("ar")
+      ], //must list locales that you support
+      locale: _locale,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -68,14 +104,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     child: TextField(
                       controller: _nameController,
-                      decoration: const InputDecoration(hintText: "Enter name"),
+                      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.translate("enter_name")),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: TextField(
                       controller: _quantityController,
-                      decoration: const InputDecoration(hintText: "Enter quantity"),
+                      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.translate("enter_quantity")),
                       keyboardType: TextInputType.number,
                     ),
                   ),
@@ -96,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       }
                     });
                   },
-                  child: const Text("add"),
+                  child: Text(AppLocalizations.of(context)!.translate("add")!),
                 ),
               ),
             ],
@@ -148,6 +184,17 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
+          actions: [
+            OutlinedButton(child:Text("English"),
+              onPressed: (){
+                MyApp.setLocale(context, Locale("en")); }),
+            OutlinedButton(child:Text("Deutsch"),
+                onPressed:(){
+              MyApp.setLocale(context, Locale("de"));}),
+            OutlinedButton(child:Text("Arabic"),
+                onPressed:(){
+                  MyApp.setLocale(context, Locale("ar"));}),
+         ],
         ),
         body: ListPage(context)
     );
